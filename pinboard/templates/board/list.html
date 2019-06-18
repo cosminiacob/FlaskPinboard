@@ -1,0 +1,23 @@
+{% extends "main.html" %}
+
+{% block nav %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('board.add') }}">Add</a>
+</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card text-white bg-{{ post.color }}">
+                <div class="card-header">{{ post.title }}</div>
+                <div class="card-body">
+                    <p class="card-text">{{ post.description }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
