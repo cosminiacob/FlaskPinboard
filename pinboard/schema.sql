@@ -5,5 +5,16 @@ CREATE TABLE post (
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
-    color TEXT NOT NULL
+    color TEXT NOT NULL 
+);
+
+DROP TABLE IF EXISTS likes;
+CREATE TABLE likes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_ip VARCHAR NOT NULL,
+    post_id INT NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id)
+        REFERENCES post (id)
+        ON DELETE CASCADE
 );

@@ -17,6 +17,6 @@ def create_app():
 
     from pinboard import board
     app.register_blueprint(board.bp)
-    app.register_blueprint(board.bp, url_prefix="/board")
+    #app.register_blueprint(board.bp, url_prefix="/board")
 
     return app

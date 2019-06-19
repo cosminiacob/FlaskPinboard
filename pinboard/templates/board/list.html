@@ -9,14 +9,19 @@
 {% block content %}
     <div class="row">
         {% for post in posts %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card text-white bg-{{ post.color }}">
-                <div class="card-header">{{ post.title }}</div>
-                <div class="card-body">
-                    <p class="card-text">{{ post.description }}</p>
-                </div>
-            </div>
-        </div>
+			<div class="col-md-6 col-lg-4 post-card" post-id="{{ post.rowid }}" style="order: {{ loop.index }};">
+				<div class="card bg-{{ post.color }} mb-3">
+					<div class="card-header text-white">{{ post.title }}</div>
+					<div class="card-body bg-light">
+						<p class="card-text">{{ post.description }}</p>
+						<p class="card-text"><small class="text-muted">{{ post.created }}</small></p>
+							<form method="post">
+								<input type="hidden" name="post_id" value="{{ post.id }}">
+								<button data-count="{{ post.like_count }}" class="btn btn-{{ post.color }} like-button"  type="submit">Like ({{ post.likes }})</button>
+							</form>	
+					</div>
+				</div>
+			</div>
         {% endfor %}
     </div>
 {% endblock %}
