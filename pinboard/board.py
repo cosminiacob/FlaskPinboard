@@ -66,33 +66,27 @@ def get_posts(to_json = False):
 
     cursor = db.cursor()
 
-    query = """SELECT rowid, id, title, description, color, created, (SELECT COUNT(id) from likes WHERE post_id=post.id) as likes FROM post ORDER BY created DESC"""
+    query = "SELECT rowid, id, title, description, color, created, (SELECT COUNT(id) from likes WHERE post_id=post.id) as likes,(SELECT COUNT(id) from likes ) as total_likes FROM post ORDER BY created DESC"
     rows = cursor.execute(query).fetchall()
-    sorted = popularity_sorting(rows)
+    sorted = sorting(rows)
     return sorted
 
-def popularity_sorting(posts):
-    return posts
+def sorting(posts):
     if len(posts) > 0:
+        total_posts = len(posts)
+        total_likes =  posts[0]["total_likes"] 
+        
         date_format = "%Y-%m-%d %H:%M:%S"
         max_date = posts[0]["created"]
-        max_data_timestamp = datetime.strptime(max_date, date_format).timestamp()
-        min_date = posts[-1]["created"]
-        min_data_timestamp = datetime.strptime(min_date, date_format).timestamp()
-        post_amount = len(posts)
-
-        created_diff = int(max_data_timestamp - min_data_timestamp)
-        score_value = created_diff / post_amount 
-        formatted_score_value = float('%.2f'%score_value)
-
+        max_timestamp = datetime.strptime(max_date, date_format).timestamp()
+        
         for post in posts:
-            date_score = int(datetime.strptime(post["created"], date_format).timestamp())
-            post_score = formatted_score_value * post["like_count"]
-
-            post["created_like_score"] = date_score + post_score
-
-        sorted_by_popularity_score = sorted(posts, key=lambda post: post["created_like_score"], reverse=True)
-
-        return sorted_by_popularity_score
+            post_age = max_timestamp - datetime.strptime(post["created"], date_format).timestamp() / 3600
+            post_likes = post["likes"]
+            if post_age == 0 :
+                post_age=1
+            post["popularity"] = post_likes / post_age
+        posts_sorted = sorted(posts, key=lambda post: post["popularity"], reverse=True)
+        return posts_sorted
     else:
         return posts
